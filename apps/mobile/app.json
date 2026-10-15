@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Rayo Taxi",
+    "slug": "rayo-taxi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "rayo",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rayo.taxi"
+    },
+    "android": {
+      "package": "com.rayo.taxi"
+    },
+    "web": {
+      "bundler": "metro",
+      "name": "Rayo Taxi"
+    },
+    "plugins": [
+      "expo-status-bar",
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Rayo comparte tu ubicaci\u00f3n mientras est\u00e1s conectado como conductor.",
+          "isIosBackgroundLocationEnabled": true,
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      "expo-notifications"
+    ]
+  }
+}

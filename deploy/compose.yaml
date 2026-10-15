@@ -1,0 +1,109 @@
+name: rayo
+x-runtime: &runtime
+  build:
+    context: ..
+    dockerfile: Dockerfile
+  image: rayo-backend:local
+  init: true
+  restart: unless-stopped
+  env_file:
+    - ${RAYO_ENV_FILE:?Define RAYO_ENV_FILE con ruta absoluta al archivo privado}
+  environment: &runtime-env
+    NODE_ENV: production
+    RAYO_MODE: production
+    SERVICE_HOST: 0.0.0.0
+    AUTH_URL: http://auth:3101
+    TRIPS_URL: http://trips:3102
+    TRACKING_URL: http://tracking:3103
+    OPS_URL: http://ops:3104
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+  networks: [backend]
+  logging: &logs
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Define POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB:?Define POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    networks: [backend]
+    healthcheck:
+      test:
+        [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    logging: *logs
+  migrate:
+    <<: *runtime
+    restart: "no"
+    command: [node, scripts/migrate.mjs]
+    depends_on:
+      postgres:
+        condition: service_healthy
+  auth:
+    <<: *runtime
+    environment:
+      <<: *runtime-env
+      SERVICE: auth
+  trips:
+    <<: *runtime
+    environment:
+      <<: *runtime-env
+      SERVICE: trips
+  tracking:
+    <<: *runtime
+    environment:
+      <<: *runtime-env
+      SERVICE: tracking
+  ops:
+    <<: *runtime
+    environment:
+      <<: *runtime-env
+      SERVICE: ops
+  gateway:
+    <<: *runtime
+    environment:
+      <<: *runtime-env
+      SERVICE: gateway
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      auth:
+        condition: service_started
+      trips:
+        condition: service_started
+      tracking:
+        condition: service_started
+      ops:
+        condition: service_started
+  worker:
+    <<: *runtime
+    environment:
+      <<: *runtime-env
+      SERVICE: worker
+  admin:
+    build:
+      context: ..
+      dockerfile: deploy/admin.Dockerfile
+    image: rayo-admin:local
+    init: true
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      API_INTERNAL_URL: http://gateway:3100
+    depends_on: [gateway]
+    networks: [backend]
+    logging: *logs
+networks:
+  backend:
+volumes:
+  postgres_data:

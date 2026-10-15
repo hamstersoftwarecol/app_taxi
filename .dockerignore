@@ -1,0 +1,9 @@
+node_modules
+.git
+apps
+.superpowers
+data
+.env
+
+**/.local
+**/*.log

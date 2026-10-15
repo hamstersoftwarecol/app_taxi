@@ -1,0 +1,14 @@
+{
+ auto_https off
+}
+:80 {
+ @backend path /api /api/* /health
+ handle @backend {
+  reverse_proxy gateway:3100 {
+   flush_interval -1
+  }
+ }
+ handle {
+  reverse_proxy admin:3000
+ }
+}

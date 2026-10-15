@@ -1,0 +1,39 @@
+services:
+  postgres:
+    ports: ["127.0.0.1:${LOCAL_POSTGRES_PORT:-55432}:5432"]
+  mailpit:
+    image: axllent/mailpit:v1.27
+    profiles: [local]
+    restart: unless-stopped
+    ports: ["127.0.0.1:${LOCAL_MAILPIT_PORT:-8025}:8025"]
+    networks: [backend]
+  caddy-local:
+    image: caddy:2-alpine
+    profiles: [local]
+    restart: unless-stopped
+    ports: ["127.0.0.1:${LOCAL_HTTP_PORT:-8080}:80"]
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
+    depends_on: [gateway, admin]
+    networks: [backend]
+  migrate:
+    environment:
+      NODE_ENV: development
+  auth:
+    environment:
+      NODE_ENV: development
+  trips:
+    environment:
+      NODE_ENV: development
+  tracking:
+    environment:
+      NODE_ENV: development
+  ops:
+    environment:
+      NODE_ENV: development
+  gateway:
+    environment:
+      NODE_ENV: development
+  worker:
+    environment:
+      NODE_ENV: development

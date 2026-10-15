@@ -1,0 +1,16 @@
+**/node_modules
+.git
+.env
+.env.*
+**/.env
+**/.env.*
+**/.next
+**/dist
+**/build
+data
+deploy/secrets
+deploy/backups
+deploy/*.env
+
+**/.local
+**/*.log

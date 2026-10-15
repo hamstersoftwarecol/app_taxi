@@ -1,0 +1,36 @@
+services:
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    profiles: [monitoring]
+    restart: unless-stopped
+    command:
+      [
+        --config.file=/etc/prometheus/prometheus.yml,
+        --storage.tsdb.retention.time=15d,
+      ]
+    volumes:
+      - ./monitoring/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    secrets: [metrics_token]
+    networks: [backend]
+    depends_on: [gateway]
+  grafana:
+    image: grafana/grafana:12.3.1
+    profiles: [monitoring]
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?Define GRAFANA_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Define GRAFANA_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports: [127.0.0.1:3001:3000]
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/datasources.yaml:/etc/grafana/provisioning/datasources/rayo.yaml:ro
+    networks: [backend]
+    depends_on: [prometheus]
+secrets:
+  metrics_token:
+    file: ${METRICS_TOKEN_FILE:?Genera METRICS_TOKEN_FILE antes de activar monitoring}
+volumes:
+  prometheus_data:
+  grafana_data:

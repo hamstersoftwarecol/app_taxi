@@ -1,0 +1,15 @@
+{
+ email {$ACME_EMAIL}
+}
+{$DOMAIN} {
+ header Strict-Transport-Security "max-age=31536000"
+ @backend path /api /api/* /health
+ handle @backend {
+  reverse_proxy gateway:3100 {
+   flush_interval -1
+  }
+ }
+ handle {
+  reverse_proxy admin:3000
+ }
+}

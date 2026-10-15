@@ -1,0 +1,34 @@
+{
+  "name": "@rayo/mobile",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "export:web": "expo export --platform web"
+  },
+  "dependencies": {
+    "@expo/metro-runtime": "~57.0.17",
+    "expo": "~57.0.29",
+    "expo-constants": "~57.0.22",
+    "expo-device": "~57.0.2",
+    "expo-linking": "~57.0.13",
+    "expo-location": "~57.0.21",
+    "expo-notifications": "~57.0.23",
+    "expo-secure-store": "~57.0.4",
+    "expo-status-bar": "~57.0.1",
+    "expo-task-manager": "~57.0.21",
+    "mapbox-gl": "^3.16.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-web": "^0.21.0",
+    "react-native-webview": "13.16.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.4",
+    "typescript": "~6.0.3"
+  }
+}

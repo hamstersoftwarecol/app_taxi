@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.expo/
+dist/
+data/*.sqlite*
+.env
+.env.local
+*.log
+.superpowers/
+.local/
+.env.*
+!.env.example
+!.env.production.example
+*.tsbuildinfo
