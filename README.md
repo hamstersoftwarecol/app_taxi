@@ -2,6 +2,10 @@
 
 Panel Next.js, aplicación Expo para Android/iOS/web y servicios de identidad, movilidad, seguimiento, operaciones y gateway. El arranque normal usa **PostgreSQL sin usuarios, conductores o viajes de demostración**. No existe acceso automático al panel.
 
+![Vista del panel de administración Rayo](docs/preview-panel.png)
+
+*Vista de referencia del panel con datos de demostración. La ejecución operativa inicia sin datos precargados.*
+
 ## Estado de esta entrega
 
 Implementadas las integraciones y sus flujos de configuración: Mapbox para cartografía/geocodificación/rutas, Stripe Checkout con firma de webhooks y conciliación, GPS nativo de segundo plano, Expo Push, SMTP, sesiones revocables, auditoría, soporte y preferencias persistidas. Preparados Docker/Caddy HTTPS y monitoreo. El usuario eligió **operación local por ahora**: no se publicó ningún dominio ni se activaron proveedores con credenciales inventadas.
